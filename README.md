@@ -1,6 +1,6 @@
 # ZMK config
 
-ZMK config for reverse engineered VGN F1 moba mouse powered by nrf52840 and PAW3395 sensor. You can also find Adafruit bootloader for this mouse [here](https://github.com/greengrocer98/Adafruit_nRF52_Bootloader).
+ZMK config for reverse engineered VGN F1/VXE R1 mouse powered by nrf52840 and PAW3395 sensor. You can also find Adafruit bootloader for this mouse [here](https://github.com/greengrocer98/Adafruit_nRF52_Bootloader).
 
 ## Pinout
 
