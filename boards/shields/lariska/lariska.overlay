@@ -17,7 +17,7 @@
 
     default_transform: keymap_transform0 {
         compatible = "zmk,matrix-transform";
-        columns = <5>;
+        columns = <6>;
         rows = <1>;
 
         map = <
@@ -26,6 +26,7 @@
             RC(0,2)
             RC(0,3)
             RC(0,4)
+            RC(0,5)
         >;
     };
 
@@ -38,6 +39,7 @@
             , <&gpio0 28 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
             , <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
             , <&gpio0 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
+            , <&gpio1 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>
             ;
     };
 
@@ -86,7 +88,7 @@
 	pinctrl-names = "default", "sleep";
 	cs-gpios = <&gpio0 27 GPIO_ACTIVE_LOW>;
 
-	pd0: pd@0 {
+	mou0: pd@0 {
 		compatible = "pixart,paw3395";
 	  status = "okay";
 		label = "MOU0";
@@ -108,6 +110,20 @@
 / {
   mouse_input_listener {
     compatible = "zmk,input-listener";
-    device = <&pd0>;
+    device = <&mou0>;
   };
+};
+
+/{
+	dpi_cycle: dpi_cycle {
+		compatible = "zmk,behavior-sensor-attr-cycle";
+		#binding-cells = <1>;
+		values = < 400 800 1200 2400 3200 >;
+		attr = <0>;
+		sensor_device = <&mou0>;
+		display-name = "DPI cycle";
+        load_delay = <200>;
+        save_delay = <1000>;
+		persistant;
+	};
 };

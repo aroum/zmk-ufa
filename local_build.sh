@@ -10,14 +10,16 @@ set -euxo pipefail
 build () {
     local shield=lariska
     export ZMK_PAW_3395="$HOME/zmk_modules/zmk-paw3395-driver"
+    export ZMK_BEHAVIOR_ATTR_CYCLE="$HOME/zmk_modules/zmk-behavior-sensor-attr-cycle"
+    export ZMK_MODULE_DIRS="${ZMK_PAW_3395};${ZMK_BEHAVIOR_ATTR_CYCLE}"
     rm -rf $CURRENT_DIR/build/$shield
     west build \
-        -p -b nice_nano_v2 \
+        -p -b nice_nano \
         -S studio-rpc-usb-uart \
         -S zmk-usb-logging \
         -d "$CURRENT_DIR/build/$shield" -- \
         -DZMK_CONFIG="$CURRENT_DIR" \
-        -DZMK_EXTRA_MODULES="${ZMK_PAW_3395}" \
+        -DZMK_EXTRA_MODULES="${ZMK_MODULE_DIRS}" \
         -DSHIELD=$shield
 
     cp "$CURRENT_DIR/build/$shield/zephyr/zmk.uf2" "$CURRENT_DIR/build/$shield/$shield.uf2"
@@ -27,7 +29,7 @@ build () {
 build_reset () {
     rm -rf $CURRENT_DIR/build/reset
     west build \
-        -p -b nice_nano_v2 \
+        -p -b nice_nano \
         -S studio-rpc-usb-uart \
         -d "$CURRENT_DIR/build/reset" -- \
         -DZMK_CONFIG="$CURRENT_DIR" \
@@ -38,12 +40,14 @@ build_reset () {
 
 CURRENT_DIR="$(pwd)"
 
-DEFAULTZMKAPPDIR="$HOME/zmk/"
+DEFAULTZMKAPPDIR="$HOME/zmk_new/"
 ZMK_APP_DIR="$DEFAULTZMKAPPDIR/app"
 
 cd $DEFAULTZMKAPPDIR && source .venv/bin/activate && cd -
 
 mkdir -p $CURRENT_DIR/build
+export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
+export ZEPHYR_SDK_INSTALL_DIR="$HOME/zephyr-sdk-0.17.0"
 
 pushd $ZMK_APP_DIR
 

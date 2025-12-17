@@ -39,6 +39,7 @@
                 &mkp MCLK
                 &mkp MB4
                 &mkp MB5
+                &dpi_cycle 1
             >;
             sensor-bindings = <&rot_enc>;
         };
