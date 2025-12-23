@@ -11,8 +11,8 @@
     vbatt: vbatt {
         compatible = "zmk,battery-voltage-divider";
         io-channels = <&adc 7>;
-        output-ohms = <1000000>;
-        full-ohms = <(1000000 + 300000)>;
+        output-ohms = <400000>;
+        full-ohms = <(1000000 + 400000)>;
     };
 
     default_transform: keymap_transform0 {
@@ -43,13 +43,13 @@
             ;
     };
 
-    encoder: encoder {
-        compatible = "alps,ec11";
-        a-gpios = <&gpio0 0 (GPIO_ACTIVE_HIGH)>;
-        b-gpios = <&gpio0 1 (GPIO_ACTIVE_HIGH)>;
-        steps = <48>;
-        status = "okay";
-    };
+    // encoder: encoder {
+    //     compatible = "alps,ec11";
+    //     a-gpios = <&gpio0 0 (GPIO_ACTIVE_HIGH)>;
+    //     b-gpios = <&gpio0 1 (GPIO_ACTIVE_HIGH)>;
+    //     steps = <48>;
+    //     status = "okay";
+    // };
 
     sensors: sensors {
         compatible = "zmk,keymap-sensors";
@@ -59,6 +59,36 @@
 
 };
 
+&pinctrl {
+	qdec_default: qdec_default {
+		group1 {
+			psels = <NRF_PSEL(QDEC_A, 0, 0)>,
+			<NRF_PSEL(QDEC_B, 0, 1)>;
+			// bias-pull-up;
+		};
+	};
+	
+	
+	// need second set of pins defined if deep sleep is enabled
+	qdec_sleep: qdec_sleep {
+		group1 {
+			psels = <NRF_PSEL(QDEC_A, 0, 0)>,
+			<NRF_PSEL(QDEC_B, 0, 1)>;
+			// bias-pull-up; // TODO: find out if this makes sense with low-power-enable
+			low-power-enable;
+		};
+	};
+};
+
+// Set up the QDEC hardware based driver and give it the same label as the deleted node.
+encoder: &qdec0 {
+	status = "okay";
+	led-pre = <0>;
+	steps = <48>;
+	pinctrl-0 = <&qdec_default>;
+	pinctrl-1 = <&qdec_sleep>;
+	pinctrl-names = "default", "sleep";
+};
 
 &pinctrl {
 	spi2_default: spi2_default {
