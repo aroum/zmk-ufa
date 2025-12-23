@@ -24,7 +24,7 @@
         rot_enc: sensor_rotate {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
-            bindings = <&ec_s MOVE_Y(50)>, <&ec_s MOVE_Y(-50)>;
+            bindings = <&ec_s MOVE_Y(-250)>, <&ec_s MOVE_Y(250)>;
             tap-ms = <65>;
         };
     };
