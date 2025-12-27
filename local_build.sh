@@ -11,7 +11,8 @@ build () {
     local shield=lariska
     export ZMK_PAW_3395="$HOME/zmk_modules/ggrocer-zmk-paw3395-driver"
     export ZMK_RGBLED_WIDGET="$HOME/zmk_modules/zmk-vfx-rgbled-indicator"
-    export ZMK_MODULE_DIRS="${ZMK_PAW_3395};${ZMK_RGBLED_WIDGET}"
+    export ZMK_RATE_LIMITER="$HOME/zmk_modules/zmk-input-processor-report-rate-limit"
+    export ZMK_MODULE_DIRS="${ZMK_PAW_3395};${ZMK_RGBLED_WIDGET};${ZMK_RATE_LIMITER}"
     rm -rf $CURRENT_DIR/build/$shield
     west build \
         -p -b nice_nano \
@@ -51,8 +52,8 @@ export ZEPHYR_SDK_INSTALL_DIR="$HOME/zephyr-sdk-0.17.0"
 
 pushd $ZMK_APP_DIR
 
-# build
-build_reset
+build
+# build_reset
 
 deactivate
 

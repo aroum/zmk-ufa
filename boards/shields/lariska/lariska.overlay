@@ -111,7 +111,7 @@ encoder: &qdec0 {
 
 &spi2 {
 	compatible = "nordic,nrf-spim";
-  status = "okay";
+    status = "okay";
 	pinctrl-0 = <&spi2_default>;
 	pinctrl-1 = <&spi2_sleep>;
 	pinctrl-names = "default", "sleep";
@@ -137,12 +137,12 @@ encoder: &qdec0 {
 	};
 };
 
-/ {
-  mouse_input_listener {
-    compatible = "zmk,input-listener";
-    device = <&mou0>;
-  };
-};
+// / {
+//   mouse_input_listener {
+//     compatible = "zmk,input-listener";
+//     device = <&mou0>;
+//   };
+// };
 
 // /{
 // 	dpi_cycle: dpi_cycle {
