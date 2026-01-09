@@ -8,7 +8,7 @@ set -euxo pipefail
 
 
 build () {
-    local shield=lariska
+    local shield=ufa
     export ZMK_PAW_3395="$HOME/zmk_modules/ggrocer-zmk-paw3395-driver"
     export ZMK_RGBLED_WIDGET="$HOME/zmk_modules/zmk-vfx-rgbled-indicator"
     export ZMK_RATE_LIMITER="$HOME/zmk_modules/zmk-input-processor-report-rate-limit"

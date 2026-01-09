@@ -1,0 +1,150 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/pointing.h>
+
+#include <input/processors/report_rate_limit.dtsi>
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/ext_power.h>
+
+#define U_TAPPING_TERM 220
+#define U_QUICK_TAP 200
+
+#define BASE 0
+#define LOWER 1
+#define RAISE 2
+#define ADJUST 3
+
+
+&zip_report_rate_limit {
+        limit-ble-only;
+};
+
+/ {
+    macros {
+        next_tab: next_tab {
+            label = "ZM_NEXT_TAB";
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings
+                = <&macro_press   &kp LCTRL>    
+                , <&macro_tap     &kp TAB>    
+                , <&macro_release &kp LCTRL>
+                ;
+        };
+        prev_tab: prev_tab {
+            label = "ZM_PREV_TAB";
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <40>;
+            tap-ms = <40>;
+            bindings
+                = <&macro_press   &kp LCTRL>    
+                , <&macro_press   &kp LSFT>    
+                , <&macro_tap     &kp TAB>    
+                , <&macro_release &kp LSFT>
+                , <&macro_release &kp LCTRL>
+                ;
+        };
+
+    behaviors {
+        u_lt_mouse: u_lt_mouse {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <U_TAPPING_TERM>;
+            quick-tap-ms = <U_QUICK_TAP>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&mkp>;
+        };
+
+        ec_s: mouse_scroll {
+            compatible = "zmk,behavior-input-two-axis";
+            #binding-cells = <1>;
+            trigger-period-ms = <3>;
+            x-input-code = <INPUT_REL_HWHEEL>;
+            y-input-code = <INPUT_REL_WHEEL>;
+            time-to-max-speed-ms = <100>;
+            acceleration-exponent = <0>;
+        };
+
+        rot_enc: sensor_rotate {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&ec_s MOVE_Y(-37)>, <&ec_s MOVE_Y(37)>;
+            tap-ms = <65>;
+        };
+        rot_enc_scroll: sensor_rotate_scroll {
+            compatible = "zmk,behavior-sensor-rotate-var";
+            #sensor-binding-cells = <2>;
+            bindings = <&msc>, <&msc>;
+            tap-ms = <65>;
+        };
+    };
+
+    mou0_mmv_il {
+        compatible = "zmk,input-listener";
+        device = <&mou0>;
+        limiter {
+                layers = <BASE LOWER RAISE ADJUST>;
+                input-processors = <&zip_report_rate_limit 15>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        BASE {
+            bindings = <
+                &mkp LCLK
+                &mkp RCLK
+                &mkp MCLK
+                &lt LOWER ESC
+                &lt RAISE DEL
+            >;
+            // sensor-bindings = <&rot_enc>;
+            sensor-bindings = <&rot_enc_scroll SCRL_UP SCRL_DOWN>;
+            
+        };
+
+        LOWER {
+            bindings = <
+                &next_tab
+                &prev_tab
+                &kp C_PLAY
+                &trans
+                &lt ADJUST C_MUTE
+            >;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+        };
+
+        RAISE {
+            bindings = <
+                &mkp LCLK
+                &mkp RCLK
+                &mkp MCLK
+                &lt ADJUST ESC
+                &trans
+            >;      
+            sensor-bindings = <&rot_enc_scroll SCRL_LEFT SCRL_RIGHT>;
+
+        };
+
+        ADJUST {
+            bindings = <
+                &mkp LCLK
+                &mkp RCLK
+                &mkp MCLK
+                &trans
+                &trans
+            >;
+            sensor-bindings = <&rot_enc>;
+        };
+
+    };
+};

@@ -1,0 +1,6 @@
+if SHIELD_UFA
+
+config ZMK_KEYBOARD_NAME
+    default "Ufa"
+
+endif
