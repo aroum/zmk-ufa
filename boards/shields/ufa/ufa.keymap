@@ -52,6 +52,7 @@
                 , <&macro_release &kp LCTRL>
                 ;
         };
+    };
 
     behaviors {
         u_lt_mouse: u_lt_mouse {
@@ -79,6 +80,7 @@
             bindings = <&ec_s MOVE_Y(-37)>, <&ec_s MOVE_Y(37)>;
             tap-ms = <65>;
         };
+
         rot_enc_scroll: sensor_rotate_scroll {
             compatible = "zmk,behavior-sensor-rotate-var";
             #sensor-binding-cells = <2>;
